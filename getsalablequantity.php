@@ -24,14 +24,16 @@ $csv = "SKU,Salable Quantity,Main Quantity\n";
 foreach ($collection as $productData) {
 
     $productId = $productData->getId();
+
+
     $productSku = $productData->getSku();
-    $qty = $productData->getQty();
+//    $qty = $productData->getQty();
 
     $StockState = $objectManager->get('\Magento\InventorySalesAdminUi\Model\GetSalableQuantityDataBySku');
     $salableQtyData = $StockState->execute(trim($productSku));
 
-//    $StockState = $objectManager->get('\Magento\CatalogInventory\Api\StockStateInterface');
-//    $qty = $StockState->getStockQty('9407', '0');
+    $StockState = $objectManager->get('\Magento\CatalogInventory\Api\StockStateInterface');
+    $qty = $StockState->getStockQty($productId, 0);
 
 
     $salableQty = $salableQtyData[0]['qty'];
@@ -39,7 +41,6 @@ foreach ($collection as $productData) {
 
     if($salableQty !=$qty){
         $csv .= "$productSku,$salableQty,$qty\n";
-
         echo $salableQty."\n";
         echo $qty."\n";
         echo $productId."\n";
